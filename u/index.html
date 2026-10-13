@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Box Test</title>
+<style>
+  :root { color-scheme: dark; --bg: #062416; --card: #0F4D2D; --text: #FFFFFF; --soft: #94C9AA; --accent: #FF4F7B; --ink: #062416; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.4; }
+  main { max-width: 480px; margin: 0 auto; padding: 32px 16px 48px; }
+  .wordmark { font-size: 40px; font-weight: 900; font-style: italic; color: var(--accent); margin: 0 0 24px; line-height: 1; }
+  h1 { font-size: 26px; margin: 0 0 8px; overflow-wrap: anywhere; }
+  p { color: var(--soft); margin: 0 0 16px; }
+  .button { display: block; text-align: center; padding: 16px; margin: 12px 0; border-radius: 4px; font-weight: 700; font-size: 18px; text-decoration: none; }
+  .primary { background: var(--accent); color: var(--ink); }
+  .secondary { border: 2px solid var(--text); color: var(--text); }
+  section { background: var(--card); padding: 16px; margin-top: 32px; border-radius: 4px; }
+  h2 { font-size: 20px; margin: 0 0 8px; }
+  ol { color: var(--soft); padding-left: 20px; margin: 0 0 8px; }
+</style>
+</head>
+<body>
+<main>
+  <p class="wordmark">Box Test</p>
+  <h1 id="headline">Someone shared their Box Test profile</h1>
+  <p>Agility cardio, measured. Open their profile in the app, or get Box Test first.</p>
+  <a id="open" class="button primary" href="#install">Open in Box Test</a>
+  <a class="button secondary" href="#install">Get Box Test</a>
+  <section id="install">
+    <h2>Get Box Test</h2>
+    <ol>
+      <li>On your Android phone, tap Download Box Test.</li>
+      <li>If Android asks, allow installs from your browser, once.</li>
+      <li>Open Box Test and set up your profile, then open this link again.</li>
+    </ol>
+    <a id="apk" class="button primary" href="https://expo.dev/artifacts/eas/eTOyshhT2iXEueW5_eAvwo-GFBByoQuyRHn3ZUPVEpM.apk">Download Box Test</a>
+    <p>iPhone: not available yet.</p>
+  </section>
+</main>
+<script>
+  (function () {
+    // Spec 2026-10-08 §6: no server call and no profile data, only the username from the link, written as text.
+    var USERNAME = /^[A-Za-z0-9_.]{3,20}$/;
+    var n = new URLSearchParams(window.location.search).get('n');
+    if (!n || !USERNAME.test(n)) return;
+    document.getElementById('headline').textContent = '@' + n + ' is on Box Test';
+    document.title = '@' + n + ' on Box Test';
+    var install = window.location.origin + window.location.pathname + window.location.search + '#install';
+    var android = /Android/i.test(navigator.userAgent);
+    var appLink = android
+      ? 'intent://u/' + n + '#Intent;scheme=boxtest;package=com.boxtest.app;S.browser_fallback_url=' + encodeURIComponent(install) + ';end'
+      : 'boxtest://u/' + n;
+    document.getElementById('open').setAttribute('href', appLink);
+    // Android opens the app on its profile page, or goes to the fallback (this page's #install) without it.
+    if (android && window.location.hash !== '#install') window.location.replace(appLink);
+  })();
+</script>
+</body>
+</html>
